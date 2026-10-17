@@ -16,7 +16,7 @@
 <div class="section-title">【オープン商品】</div><div id="char-items"></div><div id="open-items"></div>
 <div class="section-title">【ランダム商品】</div><div id="random-items"></div>
 
-<div id="summary-card"><h2>スタマイ×AGF2026 購入リスト</h2><div id="summary-content"></div><div class="summary-total-box"><div class="summary-total-row"><span>合計金額</span><span id="summary-total-price">¥0</span></div><div class="summary-bonus-row"><span>🎁 購入特典（3,000円毎）</span><span><strong id="summary-bonus-count">0</strong> 枚</span></div></div></div>
+<div id="summary-card"><h2>スタマイ×AGF2026 購入リスト</h2><div id="summary-content"></div><div class="summary-total-box"><div class="summary-total-row"><span>合計金額</span><span id="summary-total-price">¥0</span></div><div class="summary-bonus-row"><span>🎁 購入特典（3,000円ごと）</span><span><strong id="summary-bonus-count">0</strong> 枚</span></div></div></div>
 <div class="creator"><a href="https://twitter.com/intent/tweet?text=スタマイ×AGF2026 グッズ購入シミュレーター%0Ahttps://ylocal-trhk.github.io/stmy_agf2026/" target="_blank" rel="noopener">シェア</a><div>作成者：<a href="https://x.com/yLocal_trhk" target="_blank" rel="noopener">@yLocal_trhk</a></div><div><a href="https://ylocal-trhk.github.io/HOME/">← HOMEに戻る</a></div></div>
 <div class="footer-bar"><div class="footer-row"><div><span style="font-size:.75rem">合計金額</span><br><span id="total-price" class="total-price-text">¥0</span></div><div class="footer-btns"><button class="cart-btn" onclick="openCartModal()">List(<span id="cart-count">0</span>)</button><button class="reset-btn" onclick="resetAll()">Reset</button><button class="download-btn" onclick="generateImage()">画像で保存</button></div></div><div class="bonus-box"><div>🎁 購入特典: <strong id="bonus-count">0</strong> 枚(3,000円毎) <span id="next-bonus" class="next-bonus">（あと ¥3,000）</span></div></div></div>
 <div id="cart-modal" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h2>🛒 購入チェックリスト</h2><button class="close-btn" onclick="closeCartModal()">✕</button></div><div id="cart-modal-body"></div><div class="modal-footer"><button class="close-modal-btn" onclick="closeCartModal()">閉じる</button></div></div></div>
@@ -71,7 +71,7 @@ function normalizeRandomQty(){
     singleInput.value=singles;
   });
 }
-function calculateTotal(){normalizeRandomQty();['缶バッジ','トレカ（2枚入）'].forEach((name,i)=>{const si=[...document.querySelectorAll('input[data-category="sets"]')].find(e=>e.dataset.name===name);const bi=[...document.querySelectorAll('input[data-category="singles"]')].find(e=>e.dataset.name===name);if(si&&bi){const qty=Number(si.value)*10+Number(bi.value);const cost=Number(si.value)*5500+Number(bi.value)*550;const el=document.getElementById('random-total-'+i);if(el)el.textContent=`合計：${qty}／30個　¥${cost.toLocaleString()}`;}});let total=0,count=0,cart=[];const saved={};document.querySelectorAll('input[data-category]').forEach(el=>{let q=Math.max(0,parseInt(el.value)||0);const max=el.dataset.limit?Number(el.dataset.limit):Infinity;q=Math.min(max,q);el.value=q;const price=Number(el.dataset.price);saved[getKey(el)]=q;if(q>0){total+=q*price;count+=q;cart.push({key:getKey(el),name:el.dataset.name+(el.dataset.sub?'／'+el.dataset.sub:''),qty:q,price,subtotal:q*price})}});localStorage.setItem(STORAGE_KEY,JSON.stringify(saved));const bonus=Math.floor(total/3000),remaining=total%3000===0?3000:3000-total%3000;document.getElementById('total-price').textContent='¥'+total.toLocaleString();document.getElementById('cart-count').textContent=count;document.getElementById('bonus-count').textContent=bonus;document.getElementById('next-bonus').textContent='（あと ¥'+remaining.toLocaleString()+'）';document.getElementById('summary-total-price').textContent='¥'+total.toLocaleString();document.getElementById('summary-bonus-count').textContent=bonus;window.currentCart=cart;renderCart();renderSummary(cart,total,bonus)}
+function calculateTotal(){normalizeRandomQty();['缶バッジ','トレカ（2枚入）'].forEach((name,i)=>{const si=[...document.querySelectorAll('input[data-category="sets"]')].find(e=>e.dataset.name===name);const bi=[...document.querySelectorAll('input[data-category="singles"]')].find(e=>e.dataset.name===name);if(si&&bi){const qty=Number(si.value)*10+Number(bi.value);const cost=Number(si.value)*5500+Number(bi.value)*550;const el=document.getElementById('random-total-'+i);if(el)el.textContent=`合計：${qty}／30個　¥${cost.toLocaleString()}`;}});let total=0,count=0,cart=[];const saved={};document.querySelectorAll('input[data-category]').forEach(el=>{let q=Math.max(0,parseInt(el.value)||0);const max=el.dataset.limit?Number(el.dataset.limit):Infinity;q=Math.min(max,q);el.value=q;const price=Number(el.dataset.price);saved[getKey(el)]=q;if(q>0){total+=q*price;count+=q;cart.push({key:getKey(el),name:(el.dataset.category==='open'&&['マトリ・都築兄弟','警視庁・九条家','Revel・瀬尾研究室'].includes(el.dataset.name)?'イラカ／'+el.dataset.name:el.dataset.name)+(el.dataset.sub?'／'+el.dataset.sub:''),qty:q,price,subtotal:q*price})}});localStorage.setItem(STORAGE_KEY,JSON.stringify(saved));const bonus=Math.floor(total/3000),remaining=total%3000===0?3000:3000-total%3000;document.getElementById('total-price').textContent='¥'+total.toLocaleString();document.getElementById('cart-count').textContent=count;document.getElementById('bonus-count').textContent=bonus;document.getElementById('next-bonus').textContent='（あと ¥'+remaining.toLocaleString()+'）';document.getElementById('summary-total-price').textContent='¥'+total.toLocaleString();document.getElementById('summary-bonus-count').textContent=bonus;window.currentCart=cart;renderCart();renderSummary(cart,total,bonus)}
 function renderCart(){
  const body=document.getElementById('cart-modal-body');const cart=window.currentCart||[];
  if(!cart.length){body.innerHTML='<p style="text-align:center;color:#64748b">商品が選択されていません。</p>';return}
@@ -95,14 +95,32 @@ function renderCart(){
 function toggleChecked(key,checked){key=decodeURIComponent(key);if(checked)checkedItemKeys.add(key);else checkedItemKeys.delete(key);localStorage.setItem(CHECK_KEY,JSON.stringify([...checkedItemKeys]));renderCart()}
 function openCartModal(){renderCart();document.getElementById('cart-modal').classList.add('open')}function closeCartModal(){document.getElementById('cart-modal').classList.remove('open')}
 function renderSummary(cart,total,bonus){
- const normal=cart.filter(x=>!['sets','singles'].includes(x.key.split('|')[0]));
- const groups={};
- normal.forEach(x=>{const category=x.key.split('|')[0];const label={chars:'オープン商品／キャラ別',open:'オープン商品'}[category];(groups[label]??=[]).push(x)});
- let html=Object.entries(groups).map(([g,items])=>`<div class="summary-group-hdr">${g}</div><table class="summary-table">${items.map(x=>`<tr><td>${x.name}</td><td class="qty">×${x.qty}</td><td class="subtotal">¥${x.subtotal.toLocaleString()}</td></tr>`).join('')}</table>`).join('');
- ['缶バッジ','トレカ（2枚入）'].forEach(name=>{
-   const set=cart.find(x=>x.key===`sets|${name}|`),single=cart.find(x=>x.key===`singles|${name}|`);
-   const sets=set?set.qty:0,singles=single?single.qty:0,qty=sets*10+singles,cost=(set?set.subtotal:0)+(single?single.subtotal:0);
-   if(qty>0)html+=`<div class="summary-group-hdr">ランダム商品／${name}</div><table class="summary-table"><tr><td>10パックセット：${sets}セット × ¥5,500</td><td class="subtotal">¥${(sets*5500).toLocaleString()}</td></tr><tr><td>バラ売り：${singles}個 × ¥550</td><td class="subtotal">¥${(singles*550).toLocaleString()}</td></tr><tr><td><strong>合計：${qty}／30個</strong></td><td class="subtotal"><strong>¥${cost.toLocaleString()}</strong></td></tr></table>`;
+ const byCategory=category=>cart.filter(x=>x.key.split('|')[0]===category);
+ const chars=byCategory('chars'), open=byCategory('open'), sets=byCategory('sets'), singles=byCategory('singles');
+ const table=rows=>`<table class="summary-table">${rows.map(x=>`<tr><td>${x.label||x.name}</td><td class="qty">${x.qtyLabel!==undefined?x.qtyLabel:'×'+x.qty}</td><td class="subtotal">¥${x.subtotal.toLocaleString()}</td></tr>`).join('')}</table>`;
+ const section=(title,content)=>`<div class="summary-group-hdr">${title}</div>${content}`;
+ let html='';
+ const irokaNames=['マトリ・都築兄弟','警視庁・九条家','Revel・瀬尾研究室'];
+ const iroka=open.filter(x=>irokaNames.includes(x.name));
+ const calendar=open.filter(x=>x.name==='2027卓上カレンダー');
+ const otherOpen=open.filter(x=>!irokaNames.includes(x.name)&&x.name!=='2027卓上カレンダー');
+ const openRows=[];
+ chars.forEach(x=>openRows.push({...x,label:x.name}));
+ iroka.forEach(x=>openRows.push({...x,label:'イラカ／'+x.name}));
+ calendar.forEach(x=>openRows.push({...x,label:'カレンダー'}));
+ otherOpen.forEach(x=>openRows.push({...x,label:x.name}));
+ if(openRows.length) html+=section('オープン商品',table(openRows));
+ [['缶バッジ','缶バッジ／ランダム'],['トレカ（2枚入）','トレカ／ランダム']].forEach(([name,title])=>{
+   const set=sets.find(x=>x.name===name), single=singles.find(x=>x.name===name);
+   const setQty=set?set.qty:0, singleQty=single?single.qty:0, qty=setQty*10+singleQty;
+   if(!qty)return;
+   const cost=(set?set.subtotal:0)+(single?single.subtotal:0);
+   const rows=[
+    {label:'パック',qtyLabel:`${setQty}セット × ¥5,500`,subtotal:setQty*5500},
+    {label:'バラ売り',qtyLabel:`${singleQty}個 × ¥550`,subtotal:singleQty*550},
+    {label:`合計：${qty}／30個`,qtyLabel:'',subtotal:cost}
+   ];
+   html+=section(title,table(rows));
  });
  document.getElementById('summary-content').innerHTML=html||'<p style="text-align:center">商品未選択</p>';
 }
